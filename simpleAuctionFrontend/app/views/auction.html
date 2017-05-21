@@ -1,0 +1,38 @@
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Add Auction</h3>
+</div>
+<div class="modal-body" id="modal-body">
+	<p class="text-danger">{{$ctrl.validationError}}</p>
+	
+	<form>
+		<div class="form-group">
+			<label for="auctionTitle">Title</label>
+			<input type="text" class="form-control" id="auctionTitle" aria-describedby="titleHelp" placeholder="Enter title" maxlength="30" ng-model="$ctrl.auctionTitle">
+			<small id="titleHelp" class="form-text text-muted">Title of the auction. From 2 to 30 characters.</small>
+		</div>
+
+		<div class="form-group">
+			<label for="auctionPrice">Price</label>
+			<input type="number" class="form-control" id="auctionPrice" aria-describedby="priceHelp" placeholder="Enter price" min="1" max="90000000000000" ng-model="$ctrl.auctionPrice">
+			<small id="priceHelp" class="form-text text-muted">Price of the auction. Miniumum value 1.</small>
+		</div>
+	
+		<div class="form-group">
+			<label for="auctionDescription">Description</label>
+			<input type="text" class="form-control" id="auctionDescription" aria-describedby="descriptionHelp" maxlength="250" placeholder="Enter description" ng-model="$ctrl.auctionDescription">
+			<small id="descriptionHelp" class="form-text text-muted">Description of the auction. Max 250 characters.</small>
+		</div>
+		
+		<div class="form-group">
+			<label for="auctionValidity">Validity</label>
+			<input type="number" class="form-control" id="auctionValidity" aria-describedby="validityHelp" placeholder="Enter validity in days" min="1" max="30" ng-model="$ctrl.auctionValidity">
+			<small id="validityHelp" class="form-text text-muted">Number of days this auction will be valid. From 1 to 30 days.</small>
+		</div>
+	
+	</form>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="$ctrl.addAuction()">Add</button>
+    <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+</div>

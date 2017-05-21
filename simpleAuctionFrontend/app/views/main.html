@@ -1,0 +1,80 @@
+<div class="jumbotron">
+  <p class="lead" ng-show="!connected">
+	Please login to see auctions. If you don't have an account please register.
+  </p>
+  <p ng-show="!connected"><input type="text" maxlength="20" ng-model="userLogin" placeholder="Type your login name" />
+  <p ng-show="!connected"><input type="password" maxlength="20" ng-model="userPassword" placeholder="Type your password" ng-keyup="$event.keyCode == 13 && login()" />
+  <div class="inline">
+	  <a ng-show="!connected" class="btn btn-lg btn-success" ng-click="login()">Login <span class="glyphicon glyphicon-flash"></span></a>
+	  <a ng-show="connected" class="btn btn-lg btn-danger" ng-click="logout()">Logout <span class="glyphicon glyphicon-off"></span></a>
+	  <a ng-show="!connected" class="btn btn-lg btn-primary" ng-click="register()">Register <span class="glyphicon glyphicon-user"></span></a>
+  </div>
+  <p ng-class="connected ? 'text-info' : 'text-danger'">{{loginMessage}}</p>
+</div>
+
+<div class="row marketing" ng-show="connected">
+	<div>
+
+	<div class="panel panel-default panel-table">
+	  <div class="panel-heading">
+		<div class="row">
+		  <div class="col col-xs-6">
+		    <h3 class="panel-title">Current Auctions 
+				<small>
+					<span class="state-filter" ng-class="currentState == 'all' ? 'active' : ''" ng-click="getAuctions()">All</span>
+					<span class="state-filter" ng-class="currentState == 'opened' ? 'active' : ''" ng-click="getOpenedAuctions()">Opened</span>
+					<span class="state-filter" ng-class="currentState == 'closed' ? 'active' : ''" ng-click="getClosedAuctions()">Closed</span>
+		    	</small>
+		    	
+		    </h3><span class="glyphicon glyphicon-info-refresh"></span>
+		  </div>
+		  <div class="col col-xs-6 text-right">
+		    <button type="button" class="btn btn-sm btn-primary" ng-click="refreshAuctions()">Refresh <span class="glyphicon glyphicon-refresh"></span></button>
+		    <button type="button" class="btn btn-sm btn-success btn-create" ng-click="addAuction()">New Auction <span class="glyphicon glyphicon-plus"></span></button>
+		  </div>
+		</div>
+	  </div>
+	  <div class="panel-body">
+		<table class="table table-striped table-bordered table-list">
+		<thead>
+		<tr>
+			<th style="min-width:105px"><span class="glyphicon glyphicon-cog"></span></th>
+			<th>Title</th>
+			<th>Description</th>
+			<th>Owner</th>
+			<th>Top bidder</th>
+			<th>Price</th>
+			<th>{{currentState == 'closed' ? 'Closed' : 'Started'}}</th>
+			<th>Valid until</th>
+		</tr> 
+		</thead>
+		<tbody>
+			<tr ng-repeat="auction in auctions">
+				<td align="center">
+				  <a class="btn btn-success" alt="Bid this auction" ng-show="auction.owner.login != currentUser.login && auction.isOpen" ng-click="bid(auction.id)"><span class="glyphicon glyphicon-usd" ></a>
+				  <a class="btn btn-danger" alt="Finish this auction" ng-show="auction.owner.login == currentUser.login && auction.isOpen" ng-click="close(auction.id)"><span class="glyphicon glyphicon-eye-close"></a>
+				</td>
+				<td>{{auction.title}}</td>
+				<td>{{auction.description}}</td>
+				<td>{{auction.owner.login}}</td>
+				<td>{{auction.topBidder ? auction.topBidder.login : 'None'}} <span class="text-primary show-more" ng-show="auction.topBidder" ng-click="showBidders(auction.id)">(more)</span></td>
+				<td><strong>{{auction.price | number : 2}}</strong></td>
+				<td><span class="small">{{currentState == 'closed' ? auction.closeDate : auction.openDate | date: 'yyyy-MM-dd hh:mm:ss'}}</span></td>
+				<td><strong>{{!auction.isOpen ? 'Closed' : calculateRemainingDays(auction.closeDate)}}</strong> <span class="small">{{auction.closeDate | date: 'yyyy-MM-dd hh:mm:ss'}}</span></td>
+			</tr>
+		</tbody>
+		</table>
+	  </div>
+	  
+	  <div class="panel-footer">
+		<div class="row">
+		  <div class="col col-xs-5">Page {{pagination.currentPage}} of {{pagination.totalPages}} (showing {{auctions.length}} from {{pagination.totalItems}} total)</div>
+		  <div class="col col-xs-7">
+		    <ul uib-pagination total-items="pagination.totalItems" ng-model="pagination.currentPage" ng-change="pageChanged()" class="pagination hidden-xs pull-right"></ul>
+		  </div>
+		</div>
+	  </div>
+	  
+	</div>
+	
+</div>
